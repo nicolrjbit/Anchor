@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>锚点 · 模式选择</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/p1.css" />
+  </head>
+  <body class="page-p1">
+    <div class="shell">
+      <header class="top-bar">
+        <div class="brand">
+          <svg
+            class="brand-icon"
+            viewBox="0 0 32 32"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path
+              d="M16 3L5 9.5V17c0 6.5 4.5 12 11 13.5 6.5-1.5 11-7 11-13.5V9.5L16 3z"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linejoin="round"
+            />
+            <circle cx="16" cy="15" r="3.2" fill="currentColor" />
+            <path
+              d="M16 18.5v6"
+              stroke="currentColor"
+              stroke-width="1.4"
+              stroke-linecap="round"
+            />
+          </svg>
+          <div>
+            <div class="brand-name">锚点</div>
+            <div class="brand-tag">Anchor</div>
+          </div>
+        </div>
+      </header>
+
+      <section class="hero" aria-labelledby="hero-title">
+        <h1 class="hero__title" id="hero-title">
+          拒绝体能爆表，用<em>确定性</em>重新编排你的旅行。
+        </h1>
+        <p class="hero__sub">
+          别再盲做攻略了！收藏夹躺着 20 篇笔记，地图打了 30 个
+          Pin，最后发现——玩、住、吃根本不在一条线上？
+        </p>
+      </section>
+
+      <div class="thought-stage">
+        <div class="scenarios" id="scenarios" role="list">
+        <button
+          type="button"
+          class="capsule"
+          role="listitem"
+          data-mode="ROUTE"
+        >
+          <div class="capsule__head">
+            <span class="capsule__mode">拒绝冤枉路</span>
+          </div>
+          <p class="capsule__face">想好去哪儿玩了</p>
+        </button>
+
+        <button
+          type="button"
+          class="capsule"
+          role="listitem"
+          data-mode="FOOD"
+        >
+          <div class="capsule__head">
+            <span class="capsule__mode">美食我来了</span>
+          </div>
+          <p class="capsule__face">想好吃啥了</p>
+        </button>
+
+        <button
+          type="button"
+          class="capsule"
+          role="listitem"
+          data-mode="FILL"
+        >
+          <div class="capsule__head">
+            <span class="capsule__mode">主打一个不累</span>
+          </div>
+          <p class="capsule__face">想好住哪儿了</p>
+        </button>
+
+        <button
+          type="button"
+          class="capsule"
+          role="listitem"
+          data-mode="EVENT"
+        >
+          <div class="capsule__head">
+            <span class="capsule__mode">顺便去旅游</span>
+          </div>
+          <p class="capsule__face">路过玩一玩</p>
+        </button>
+
+        <button
+          type="button"
+          class="capsule capsule--soon"
+          role="listitem"
+          data-mode="BUDGET"
+          aria-disabled="true"
+        >
+          <div class="capsule__head">
+            <span class="capsule__mode">预算卡死了</span>
+            <span class="capsule__badge">暂未上线</span>
+          </div>
+          <p class="capsule__face">我的预算和时间有限</p>
+        </button>
+        </div>
+      </div>
+    </div>
+
+    <footer class="chat-hub" aria-label="行程对话输入">
+      <div class="chat-hub__inner">
+        <form class="chat-box" id="chat-form">
+          <label for="chat-input" class="visually-hidden">描述你的旅行困境</label>
+          <textarea
+            id="chat-input"
+            class="chat-box__input"
+            rows="1"
+            placeholder="问问Anchor"
+            autocomplete="off"
+          ></textarea>
+          <button
+            type="submit"
+            class="chat-box__send"
+            id="btn-send"
+            disabled
+            aria-label="发送"
+          >
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M5 12h12M13 6l6 6-6 6"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+        </form>
+      </div>
+    </footer>
+
+    <script src="js/p1.js?v=2"></script>
+  </body>
+</html>

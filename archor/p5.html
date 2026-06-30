@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>锚点 · 出行方式</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/wizard.css?v=2" />
+  </head>
+  <body class="page-wizard">
+    <header class="wizard-top">
+      <a class="wizard-top__back" href="p4.html">← 返回跟随页</a>
+      <span class="wizard-top__step">第 5 页 · 出行方式</span>
+    </header>
+    <main class="wizard-main">
+      <h1 class="wizard-title">逐段确认出行方式</h1>
+      <p class="wizard-sub" id="page-sub">
+        正在按你的住/玩/吃动线计算各路段…
+      </p>
+      <div id="transport-root"></div>
+      <div class="wizard-error" id="page-error" hidden></div>
+    </main>
+    <footer class="wizard-footer">
+      <span class="wizard-footer__hint" id="footer-hint">加载路段中…</span>
+      <button type="button" class="wizard-btn" id="btn-next" disabled>下一步 · 合成路书</button>
+    </footer>
+    <script src="js/session.js?v=2"></script>
+    <script src="js/p5-transport.js?v=1"></script>
+  </body>
+</html>

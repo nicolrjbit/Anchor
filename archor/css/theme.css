@@ -1,0 +1,72 @@
+/**
+ * 锚点 Archor · 独立前端主题
+ */
+:root {
+  --green: rgb(1, 68, 33);
+  --green-deep: rgb(1, 50, 24);
+  --green-soft: rgba(1, 68, 33, 0.07);
+  --green-mid: rgba(1, 68, 33, 0.5);
+  --green-glow: rgba(1, 68, 33, 0.12);
+
+  --sakura: rgb(255, 183, 197);
+  --sakura-deep: rgb(188, 132, 148);
+  --sakura-light: rgb(252, 246, 248);
+  --sakura-soft: rgba(255, 183, 197, 0.12);
+  --sakura-line: rgba(255, 183, 197, 0.22);
+
+  --paper: #faf9f7;
+  --paper-hot: #fdfdfc;
+  --ink: rgb(18, 38, 28);
+  --ink-soft: rgb(1, 68, 33);
+  --muted: var(--green-mid);
+  --line: rgba(1, 68, 33, 0.1);
+  --card: rgba(255, 255, 255, 0.92);
+  --shadow: 0 16px 40px rgba(1, 68, 33, 0.06);
+  --shadow-lg: 0 20px 48px rgba(1, 68, 33, 0.09);
+  --radius: 16px;
+  --font-ui: "Outfit", system-ui, sans-serif;
+  --font-display: "Noto Serif SC", serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-ui);
+  color: var(--ink);
+  background: var(--paper);
+  background-image: radial-gradient(
+      ellipse 72% 58% at 6% -8%,
+      rgba(255, 183, 197, 0.05),
+      transparent 52%
+    ),
+    radial-gradient(
+      ellipse 58% 48% at 98% 2%,
+      var(--green-soft),
+      transparent 50%
+    ),
+    linear-gradient(180deg, var(--paper-hot) 0%, var(--paper) 100%);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.028'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}

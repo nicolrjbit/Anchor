@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" role="img" aria-label="李子坝轻轨穿楼观景">
+  <rect width="160" height="120" rx="10" fill="#faf6ef"/>
+  <rect x="8" y="8" width="144" height="88" rx="6" fill="#b45a28" opacity="0.35"/>
+  <path d="M20,95 L140,95 M30,95 L30,50 L50,45 L70,50 L90,42 L110,48 L130,52 L130,95" fill="none" stroke="#9eb4c8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M12,100 Q80,108 148,100" fill="none" stroke="#9eb4c8" stroke-width="1.2" opacity="0.5"/>
+  <text x="80" y="112" text-anchor="middle" font-family="Georgia, serif" font-size="9" fill="#5a4632">李子坝轻轨穿</text>
+</svg>

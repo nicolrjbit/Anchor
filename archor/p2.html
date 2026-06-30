@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>锚点 · 对话</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/p2.css" />
+  </head>
+  <body class="page-p2">
+    <header class="p2-header">
+      <a class="p2-back" href="index.html" aria-label="返回模式选择">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path
+            d="M15 18l-6-6 6-6"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </a>
+      <div class="p2-header__title">
+        <span class="p2-header__name">Anchor</span>
+        <span class="p2-header__state" id="state-label">聊聊行程</span>
+      </div>
+      <div class="p2-header__spacer" aria-hidden="true"></div>
+    </header>
+
+    <div class="p2-progress" id="slot-progress" aria-label="行程信息进度">
+      <span class="p2-chip" data-slot="destination">目的地</span>
+      <span class="p2-chip" data-slot="days">天数</span>
+      <span class="p2-chip" data-slot="anchor">主线</span>
+      <span class="p2-chip" data-slot="tags">同行</span>
+      <span class="p2-chip" data-slot="transport">出行</span>
+    </div>
+
+    <main class="p2-main">
+      <div class="p2-thread" id="chat-thread" aria-live="polite"></div>
+    </main>
+
+    <footer class="p2-footer">
+      <div class="p2-actions" id="convergence-actions" hidden>
+        <button type="button" class="p2-generate" id="btn-generate">
+          下一步
+        </button>
+      </div>
+
+      <form class="p2-composer" id="chat-form">
+        <label for="chat-input" class="visually-hidden">继续对话</label>
+        <div class="p2-composer__box">
+          <textarea
+            id="chat-input"
+            class="p2-composer__input"
+            rows="1"
+            placeholder="问问 Anchor"
+            autocomplete="off"
+          ></textarea>
+          <button
+            type="submit"
+            class="p2-composer__send"
+            id="btn-send"
+            disabled
+            aria-label="发送"
+          >
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M5 12h12M13 6l6 6-6 6"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+        </div>
+      </form>
+    </footer>
+
+    <script src="js/session.js?v=2"></script>
+    <script src="js/p2.js?v=3"></script>
+  </body>
+</html>

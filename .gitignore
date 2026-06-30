@@ -1,0 +1,24 @@
+.DS_Store
+.env
+.env.*
+*.pyc
+__pycache__/
+.venv/
+venv/
+node_modules/
+.cursor/
+.agents/
+.claude/
+.trae/
+.vscode/
+
+# 本仓库只跟踪 Anchor 项目，其它目录忽略
+/the-ticket/
+/travel-data/
+/travel-guide-p1/
+/skills/
+/skills-lock.json
+/index.html
+/*.xls
+/*.xlsx
+/*简历*.md

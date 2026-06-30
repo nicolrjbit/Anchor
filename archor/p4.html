@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>锚点 · 跟随页</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/wizard.css?v=2" />
+  </head>
+  <body class="page-wizard">
+    <header class="wizard-top">
+      <a class="wizard-top__back" href="p3.html">← 返回锚点页</a>
+      <span class="wizard-top__step">第 4 页 · 跟随页</span>
+    </header>
+    <main class="wizard-main">
+      <h1 class="wizard-title" id="page-title">跟随推荐</h1>
+      <p class="wizard-sub" id="page-sub"></p>
+      <div id="follow-root"></div>
+      <div class="wizard-error" id="page-error" hidden></div>
+    </main>
+    <footer class="wizard-footer">
+      <span class="wizard-footer__hint" id="footer-hint">每个锚点选 1 项跟随</span>
+      <button type="button" class="wizard-btn" id="btn-next" disabled>下一步 · 出行方式</button>
+    </footer>
+    <script src="js/session.js?v=2"></script>
+    <script src="js/p4-follow.js?v=1"></script>
+  </body>
+</html>

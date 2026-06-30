@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" role="img" aria-label="南山一棵树观景台">
+  <rect width="160" height="120" rx="10" fill="#faf6ef"/>
+  <rect x="8" y="8" width="144" height="88" rx="6" fill="#c4a882" opacity="0.35"/>
+  <path d="M20,95 L50,40 L80,55 L110,35 L140,95 M60,95 L60,75" fill="none" stroke="#6b9a7a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M12,100 Q80,108 148,100" fill="none" stroke="#6b9a7a" stroke-width="1.2" opacity="0.5"/>
+  <text x="80" y="112" text-anchor="middle" font-family="Georgia, serif" font-size="9" fill="#5a4632">南山一棵树观</text>
+</svg>

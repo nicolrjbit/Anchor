@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>锚点 · 推荐方案</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/p6.css?v=2" />
+  </head>
+  <body class="page-p6">
+    <div class="p3-scene">
+      <header class="p3-topbar">
+        <a class="p3-back" href="p5.html">← 返回跟随页</a>
+        <span class="p3-topbar__hint" id="page-indicator">封面 · 第 6 页</span>
+      </header>
+
+      <div class="handbook-wrap">
+        <div class="handbook-spine" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <div class="handbook-frame">
+          <div class="handbook-frame__label" aria-hidden="true">旅行手帐</div>
+          <div class="handbook-tape handbook-tape--tl" aria-hidden="true"></div>
+          <div class="handbook-tape handbook-tape--br" aria-hidden="true"></div>
+          <div class="handbook-stamp" aria-hidden="true">路</div>
+          <div class="flipbook-stage" id="flipbook-stage">
+            <div class="flipbook" id="flipbook">
+              <div class="spread spread--cover boot-placeholder" id="boot-placeholder">
+                <div class="page cover">
+                  <div class="cover__hero" style="background: linear-gradient(135deg, #9ec5a8, #6b9a7a)"></div>
+                  <div class="cover__panel">
+                    <div class="cover__eyebrow">Anchor 定制路书 · 扉页</div>
+                    <h1 class="cover__title">正在合成你的路书…</h1>
+                    <p class="boot-placeholder__hint">填充逻辑与动线编排进行中</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="flipbook__tip">轻点右侧翻页 · 左侧返回</p>
+        </div>
+      </div>
+
+      <aside class="gen-progress" id="gen-progress" aria-live="polite">
+        <div class="gen-progress__head">
+          <span class="gen-progress__status" id="gen-status">正在合成路书…</span>
+          <span class="gen-progress__eta" id="gen-eta">预计 3 秒</span>
+        </div>
+        <div class="gen-progress__track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="5">
+          <div class="gen-progress__bar" id="gen-bar" style="width: 5%"></div>
+        </div>
+        <ol class="gen-progress__steps" id="gen-steps"></ol>
+      </aside>
+
+      <div class="p3-error" id="p3-error" hidden></div>
+      <div class="export-root" id="export-root" aria-hidden="true"></div>
+      <div class="export-toast" id="export-toast" hidden role="status"></div>
+    </div>
+
+    <script src="js/amap-config.js"></script>
+    <script src="js/amap-loader.js"></script>
+    <script src="js/session.js?v=2"></script>
+    <script src="js/p6.js?v=2"></script>
+  </body>
+</html>

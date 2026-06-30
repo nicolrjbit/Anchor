@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>锚点 · 第一锚点</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/wizard.css?v=2" />
+  </head>
+  <body class="page-wizard">
+    <header class="wizard-top">
+      <a class="wizard-top__back" href="p2.html">← 返回对话</a>
+      <span class="wizard-top__step">第 3 页 · 锚点页</span>
+    </header>
+    <main class="wizard-main">
+      <h1 class="wizard-title" id="page-title">选择第一锚点</h1>
+      <p class="wizard-sub" id="page-sub"></p>
+      <div class="poi-grid" id="poi-grid"></div>
+      <div class="wizard-error" id="page-error" hidden></div>
+    </main>
+    <footer class="wizard-footer">
+      <span class="wizard-footer__hint" id="footer-hint">请至少选择 1 项</span>
+      <button type="button" class="wizard-btn" id="btn-next" disabled>下一步</button>
+    </footer>
+    <script src="js/session.js?v=2"></script>
+    <script src="js/p3-anchor.js?v=2"></script>
+  </body>
+</html>
