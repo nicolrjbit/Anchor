@@ -11,6 +11,7 @@ from typing import Any
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
@@ -174,7 +175,9 @@ if ARCHOR_DIR.is_dir():
 
 
 @app.get("/")
-def root() -> dict[str, str]:
+def root():
+    if ARCHOR_DIR.is_dir():
+        return RedirectResponse(url="/archor/")
     return {
         "message": "Anchor API",
         "archor": "/archor/",

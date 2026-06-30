@@ -99,6 +99,27 @@ pip install -r requirements.txt
 python3 db/init_db.py                      # 建表 + 种子数据（首次）
 python3 -m unittest discover -s tests -q   # 跑测试
 ./start.sh                                 # 启动服务 → http://localhost:8000/archor/
+
+## 部署到 Render（公网访问）
+
+1. 把本仓库推到 GitHub（已完成：`nicolrjbit/Anchor`）。
+2. 打开 [Render Dashboard](https://dashboard.render.com/) → **New** → **Blueprint**。
+3. 连接 GitHub 仓库 **Anchor**，Render 会读取根目录 `render.yaml` 并创建 Web Service。
+4. （可选）在 Service → **Environment** 添加 `DEEPSEEK_API_KEY`；不填则使用规则 NLU。
+5. 部署完成后访问：`https://<你的服务名>.onrender.com/archor/`（根路径 `/` 会自动跳转）。
+
+**手动创建 Web Service**（不用 Blueprint 时）：
+
+| 项 | 值 |
+|----|-----|
+| Root Directory | `anchor-backend` |
+| Build Command | `pip install -r requirements.txt && python db/init_db.py` |
+| Start Command | `bash render_start.sh` |
+| Health Check | `/api/health` |
+
+**高德地图（P3/P6）**：在[高德控制台](https://console.amap.com/) Key 白名单加入 `*.onrender.com` 或你的具体域名；服务器上无法写入被 gitignore 的 `amap-config.js`，若需地图可改为在 Render 环境变量注入或提交 example 副本（勿泄露 Key）。
+
+免费实例约 15 分钟无访问会休眠，首次打开需等待 ~30 秒冷启动。
 ```
 
 ## 数据库（`db/anchor.db`）
