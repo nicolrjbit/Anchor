@@ -16,7 +16,7 @@ from anchor.modifications import (
     infer_pace_modifier,
     is_modification_intent,
 )
-from anchor.nlu import LLMClient, apply_uncertain_days_default, extract_slots
+from anchor.nlu import LLMClient, apply_mode_profile_default, apply_uncertain_days_default, extract_slots
 from anchor.prompts import (
     ALREADY_CONVERGED_REPLY,
     FALLBACK_QUESTIONS,
@@ -159,6 +159,7 @@ def _process_slot_extraction(
     session.slots, days_note = apply_uncertain_days_default(
         message, session.slots, mode=mode
     )
+    session.slots = apply_mode_profile_default(message, session.slots, mode=mode)
     unsupported = _unsupported_destination(session.slots)
     return before, days_note, unsupported
 

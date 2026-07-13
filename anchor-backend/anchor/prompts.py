@@ -36,7 +36,7 @@ MISSING_HINTS = {
     "destination": "还不清楚要去哪座城市",
     "days": "还不清楚大概玩几天",
     "anchor": "还不清楚核心是「吃 / 住 / 玩」里的哪一类（P1 模式已选则大类已定，勿重复问）",
-    "tags": "还不清楚用户画像（同行人/身份：学生、情侣朋友、带娃、陪长辈、独自、上班族、出差等）",
+    "tags": "还不清楚用户画像（同行人/身份：一个人、朋友情侣、带娃、陪长辈、出差、上班族等）",
     "transport": "还不清楚路上更倾向地铁+步行，还是自驾/租车等",
 }
 
@@ -44,7 +44,7 @@ FALLBACK_QUESTIONS = {
     "destination": "打算去哪座城市？",
     "days": "这次大概玩几天？",
     "anchor": "这趟主要是想吃、想住好，还是想逛景点？",
-    "tags": "想更了解你这类出行的人——像聊天一样问：和谁一起、什么身份，不要列选项清单",
+    "tags": "像朋友聊天一样问：这趟和谁一起（一个人、朋友、带娃、陪爸妈等），不要问「场合」、不要列选项清单",
     "transport": "这趟路上你更想怎么动？地铁加步行，还是自驾/租车？随便说说～",
 }
 
@@ -200,7 +200,16 @@ def build_slot_followup_user(slots: Slots, latest_message: str, focus: str) -> s
 
 def build_profile_tag_followup(slots: Slots) -> str:
     """生成方案前采集用户画像的话术（模板兜底）。"""
-    return "这趟主要是和谁一起、什么场合呀？随便说说就行～"
+    if slots.destination and slots.days:
+        lead = f"好～去{slots.destination}玩{slots.days}天，"
+    elif slots.destination:
+        lead = f"好～去{slots.destination}，"
+    else:
+        lead = ""
+    return (
+        f"{lead}最后想了解下：这趟和谁一起呀？"
+        "比如一个人、和朋友、带娃、陪爸妈——说个最接近的就行～"
+    )
 
 
 def build_transport_followup(slots: Slots, *, extra_note: str | None = None) -> str:

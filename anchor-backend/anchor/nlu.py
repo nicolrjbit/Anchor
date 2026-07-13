@@ -14,7 +14,7 @@ from anchor.slots import (
     normalize_anchor,
     normalize_destination,
 )
-from anchor.tag_mapping import extract_profile_tags, resolve_profile_tags
+from anchor.tag_mapping import extract_profile_tags, has_profile_tag, resolve_profile_tags
 from anchor.transport_mapping import extract_transport_preferences
 
 LANDMARK_PATTERN = re.compile(
@@ -38,6 +38,18 @@ DEFAULT_DAYS_BY_MODE: dict[str, int] = {
     "RISK": 3,
 }
 DEFAULT_DAYS_FALLBACK = 3
+
+# P1 模式默认用户画像（EVENT 自动带上，其它模式在用户说「随便」时兜底）
+DEFAULT_PROFILE_BY_MODE: dict[str, str] = {
+    "EVENT": "商务出差",
+    "ROUTE": "年轻情侣/朋友",
+    "FOOD": "年轻情侣/朋友",
+    "FILL": "上班族",
+    "BUDGET": "年轻情侣/朋友",
+}
+PROFILE_VAGUE_ACK_PATTERN = re.compile(
+    r"^(随便|都行|都可以|不知道|没想好|普通|一般|没啥|无所谓|看你|你定|看着办)[。！]?$"
+)
 BARE_DAYS_PATTERN = re.compile(r"^(\d{1,2})$")
 BARE_CN_DAYS_PATTERN = re.compile(r"^([一二三四五六七八九十两]+)$")
 
@@ -61,6 +73,23 @@ def apply_uncertain_days_default(
     updated = slots.merge({"days": default}, mode=mode)
     note = f"天数你先不定的话，我先按 {default} 天排，后面还能改"
     return updated, note
+
+
+def apply_mode_profile_default(
+    message: str,
+    slots: Slots,
+    *,
+    mode: str | None = None,
+) -> Slots:
+    """EVENT 等模式自动补用户画像；用户说「随便」时按模式给合理默认。"""
+    if has_profile_tag(slots.tags):
+        return slots
+    default = DEFAULT_PROFILE_BY_MODE.get(mode or "")
+    if not default:
+        return slots
+    if mode == "EVENT" or PROFILE_VAGUE_ACK_PATTERN.match(message.strip()):
+        return slots.merge({"tags": [default]}, mode=mode)
+    return slots
 
 
 def infer_days(text: str, current: Slots) -> int | None:

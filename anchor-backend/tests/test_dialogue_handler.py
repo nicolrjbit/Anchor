@@ -46,6 +46,7 @@ class TestDialogueHandler(unittest.TestCase):
         t3 = handle_user_message(t2.session, "地铁加步行", llm=None, mode="FOOD")
         self.assertIn("tags", t3.meta.get("missing", []))
         self.assertIn("和谁一起", t3.reply)
+        self.assertNotIn("场合", t3.reply)
 
         t4 = handle_user_message(t3.session, "和女朋友一起", llm=None, mode="FOOD")
         self.assertEqual(t4.session.current_state, State.CONVERGENCE)
@@ -300,6 +301,29 @@ class TestDialogueHandler(unittest.TestCase):
         self.assertIn("自驾", turn.reply)
         self.assertNotIn("路上按", turn.reply)
         self.assertNotIn("和谁一起", turn.reply)
+
+    def test_event_mode_auto_profile_skips_tags_question(self):
+        msg = "出差到重庆，想抽半天随便走走，帮我安排个轻松的行程。"
+        turn = handle_user_message(Session(), msg, llm=None, mode="EVENT")
+        self.assertEqual(turn.session.slots.destination, "重庆")
+        self.assertIn("商务出差", turn.session.slots.tags)
+        self.assertNotIn("tags", turn.meta.get("missing", []) or [])
+        self.assertNotIn("场合", turn.reply)
+        self.assertNotIn("和谁一起", turn.reply)
+        self.assertEqual(turn.session.current_state, State.CONVERGENCE)
+
+    def test_profile_vague_ack_uses_mode_default(self):
+        session = Session()
+        session.current_state = State.SLOT_FILLING
+        session.slots = Slots(
+            destination="重庆",
+            days=3,
+            anchor="吃",
+            transport_preferences=["地铁", "步行"],
+        )
+        turn = handle_user_message(session, "随便", llm=None, mode="FOOD")
+        self.assertEqual(turn.session.slots.tags, ["年轻情侣/朋友"])
+        self.assertEqual(turn.session.current_state, State.CONVERGENCE)
 
 
 if __name__ == "__main__":
