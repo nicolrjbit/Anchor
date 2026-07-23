@@ -27,6 +27,8 @@ class Session:
     travel_mode: str | None = None
     transport_modes: dict[str, str] | None = None
     transport_confirmed: bool = False
+    last_asked_focus: str | None = None
+    last_assistant_reply: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -46,6 +48,8 @@ class Session:
             "travel_mode": self.travel_mode,
             "transport_modes": self.transport_modes,
             "transport_confirmed": self.transport_confirmed,
+            "last_asked_focus": self.last_asked_focus,
+            "last_assistant_reply": self.last_assistant_reply,
         }
 
     @classmethod
@@ -81,6 +85,8 @@ class Session:
             travel_mode=data.get("travel_mode"),
             transport_modes=dict(data.get("transport_modes") or {}) or None,
             transport_confirmed=bool(data.get("transport_confirmed", False)),
+            last_asked_focus=data.get("last_asked_focus"),
+            last_assistant_reply=data.get("last_assistant_reply"),
         )
 
 

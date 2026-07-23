@@ -16,6 +16,7 @@ from anchor.modifications import (
     infer_pace_modifier,
     is_modification_intent,
 )
+from anchor.dialogue_review import review_slot_followup
 from anchor.nlu import LLMClient, apply_mode_profile_default, apply_uncertain_days_default, extract_slots
 from anchor.prompts import (
     ALREADY_CONVERGED_REPLY,
@@ -83,6 +84,7 @@ def _missing_slot_question(missing: list[str], slots: Slots, *, mode: str | None
 
 
 def _generate_slot_followup(
+    session: Session,
     missing: list[str],
     slots: Slots,
     llm: LLMClient | None,
@@ -91,13 +93,27 @@ def _generate_slot_followup(
     mode: str | None,
     before: Slots,
     extra_note: str | None = None,
-) -> str:
-    focus = pick_focus(missing, mode=mode)
-    if focus == "transport":
-        return build_transport_followup(slots, extra_note=extra_note)
-    question = _missing_slot_question(missing, slots, mode=mode)
-    ack = build_multi_slot_ack(before, slots)
-    return compose_followup(ack, question, extra_note=extra_note)
+) -> tuple[str, list[str], Slots, dict[str, Any]]:
+    def build_question(focus: str, current: Slots) -> str:
+        if focus == "transport":
+            return build_transport_followup(current, extra_note=extra_note)
+        return _missing_slot_question([focus], current, mode=mode)
+
+    reply, focus, missing, slots, audit = review_slot_followup(
+        session=session,
+        missing=missing,
+        before=before,
+        after=slots,
+        message=latest_message,
+        mode=mode,
+        extra_note=extra_note,
+        build_question=build_question,
+        build_ack=build_multi_slot_ack,
+        compose=compose_followup,
+    )
+    session.last_asked_focus = focus
+    session.last_assistant_reply = reply
+    return reply, missing, slots, audit
 
 
 def _unsupported_destination(slots: Slots) -> str | None:
@@ -205,7 +221,8 @@ def _handle_convergence_turn(
     missing = session.slots.missing(mode=mode)
     if missing:
         session.current_state = State.SLOT_FILLING
-        reply = _generate_slot_followup(
+        reply, missing, session.slots, review_meta = _generate_slot_followup(
+            session,
             missing,
             session.slots,
             llm,
@@ -218,7 +235,7 @@ def _handle_convergence_turn(
         return DialogueTurn(
             reply=reply,
             session=session,
-            meta={**meta, "action": "slot_followup", "missing": missing},
+            meta={**meta, "action": "slot_followup", "missing": missing, "review": review_meta},
         )
 
     fatigue, new_score = _apply_fatigue(session)
@@ -304,7 +321,8 @@ def handle_user_message(
     missing = session.slots.missing(mode=mode)
     if missing:
         session.current_state = State.SLOT_FILLING
-        reply = _generate_slot_followup(
+        reply, missing, session.slots, review_meta = _generate_slot_followup(
+            session,
             missing,
             session.slots,
             llm,
@@ -317,7 +335,7 @@ def handle_user_message(
         return DialogueTurn(
             reply=reply,
             session=session,
-            meta={**meta, "action": "slot_followup", "missing": missing},
+            meta={**meta, "action": "slot_followup", "missing": missing, "review": review_meta},
         )
 
     fatigue, score = _apply_fatigue(session)
