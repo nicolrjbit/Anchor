@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>后台类目 · 中免日上运营平台</title>
+<style>
+  :root{
+    --primary:#7A2432;
+    --primary-hover:#631D29;
+    --primary-light:#FDF2F4;
+    --primary-border:#E8B4BC;
+    --sidebar:#1A1A2E;
+    --sidebar-sub:#252538;
+    --text:#333;
+    --muted:#888;
+    --line:#E8E8E8;
+    --bg:#F0F2F5;
+    --card:#FFF;
+    --tree-active:#FCE8EC;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"PingFang SC","Microsoft YaHei","Helvetica Neue",sans-serif;background:var(--bg);color:var(--text);font-size:13px;min-height:100vh}
+  .layout{display:flex;min-height:100vh}
+  /* global sidebar */
+  .g-side{width:56px;background:var(--sidebar);flex:none;display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:4px}
+  .g-side .logo{width:32px;height:32px;border-radius:6px;background:var(--primary);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:700;margin-bottom:8px}
+  .g-nav{width:40px;height:40px;border-radius:6px;display:grid;place-items:center;color:#999;font-size:18px;cursor:pointer}
+  .g-nav.on{background:var(--primary);color:#fff}
+  .g-nav:hover:not(.on){background:rgba(255,255,255,.08);color:#ccc}
+  /* sub sidebar */
+  .sub-side{width:160px;background:var(--sidebar-sub);flex:none;padding:12px 0;color:#aaa;font-size:12px}
+  .sub-side .title{padding:8px 16px 12px;color:#666;font-size:11px;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:4px}
+  .sub-nav{display:block;padding:8px 16px;color:#bbb;text-decoration:none;cursor:pointer;border-left:3px solid transparent}
+  .sub-nav:hover{color:#fff;background:rgba(255,255,255,.04)}
+  .sub-nav.on{color:var(--primary);background:rgba(122,36,50,.15);border-left-color:var(--primary);font-weight:600}
+  /* main */
+  .main{flex:1;display:flex;flex-direction:column;min-width:0}
+  .topbar{height:48px;background:var(--card);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 20px;gap:12px;flex:none}
+  .topbar h1{font-size:15px;font-weight:600;color:#222}
+  .topbar .right{margin-left:auto;display:flex;align-items:center;gap:12px;font-size:12px;color:var(--muted)}
+  .topbar .avatar{width:28px;height:28px;border-radius:50%;background:var(--primary);color:#fff;display:grid;place-items:center;font-size:11px}
+  .tabs{height:40px;background:var(--card);border-bottom:1px solid var(--line);display:flex;align-items:flex-end;padding:0 16px;gap:0;flex:none}
+  .tab{padding:8px 16px;font-size:13px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+  .tab.on{color:var(--primary);border-bottom-color:var(--primary);font-weight:600}
+  .tab .x{margin-left:6px;opacity:.5;font-size:11px}
+  .content{flex:1;padding:16px;display:flex;gap:16px;overflow:hidden}
+  /* tree panel */
+  .tree-panel{width:280px;background:var(--card);border:1px solid var(--line);border-radius:4px;display:flex;flex-direction:column;flex:none;overflow:hidden}
+  .tree-search{padding:12px;border-bottom:1px solid var(--line)}
+  .tree-search input{width:100%;border:1px solid var(--line);border-radius:4px;padding:6px 10px 6px 30px;font-size:12px;background:#FAFAFA url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%23999' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85zm-5.242 1.156a5 5 0 1 1 0-10 5 5 0 0 1 0 10z'/%3E%3C/svg%3E") 10px center no-repeat}
+  .tree-search input::placeholder{color:#bbb}
+  .tree-tools{padding:8px 12px;font-size:12px;color:var(--primary);border-bottom:1px solid var(--line);display:flex;gap:12px}
+  .tree-tools span{cursor:pointer}
+  .tree-tools span:hover{text-decoration:underline}
+  .tree-body{flex:1;overflow-y:auto;padding:8px 0}
+  .tree-node{display:flex;align-items:center;padding:5px 12px 5px 0;cursor:pointer;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tree-node:hover{background:#FAFAFA}
+  .tree-node.on{background:var(--tree-active);color:var(--primary);font-weight:600}
+  .tree-node .arrow{width:20px;text-align:center;color:#999;font-size:10px;flex:none;cursor:pointer}
+  .tree-node .arrow.open{transform:rotate(90deg)}
+  .tree-node .icon{color:#999;margin-right:4px;font-size:11px}
+  .tree-node.on .icon{color:var(--primary)}
+  /* detail panel */
+  .detail-panel{flex:1;background:var(--card);border:1px solid var(--line);border-radius:4px;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+  .section{padding:16px 20px;border-bottom:1px solid var(--line)}
+  .section:last-child{border-bottom:none;flex:1;overflow:auto}
+  .section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+  .section-head h2{font-size:14px;font-weight:600;color:#222}
+  .btn{border:none;border-radius:4px;padding:5px 14px;font-size:12px;cursor:pointer;font-family:inherit}
+  .btn-primary{background:var(--primary);color:#fff}
+  .btn-primary:hover{background:var(--primary-hover)}
+  .btn-default{background:#fff;border:1px solid var(--line);color:#333}
+  .btn-default:hover{border-color:#bbb}
+  .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 40px}
+  .info-item{display:flex;font-size:12px;line-height:1.8}
+  .info-item .label{color:var(--muted);width:140px;flex:none;text-align:right;padding-right:12px}
+  .info-item .value{color:#333;flex:1;word-break:break-all}
+  .info-item.full{grid-column:1/-1}
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  th{text-align:left;padding:10px 12px;background:#FAFAFA;border-bottom:1px solid var(--line);color:var(--muted);font-weight:500}
+  td{padding:10px 12px;border-bottom:1px solid var(--line);color:#333}
+  tr:hover td{background:#FAFAFA}
+  /* modal */
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:1000}
+  .overlay.show{display:flex}
+  .modal{background:var(--card);border-radius:6px;width:640px;max-height:90vh;overflow:auto;box-shadow:0 8px 32px rgba(0,0,0,.18)}
+  .modal-head{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid var(--line)}
+  .modal-head h3{font-size:16px;font-weight:600}
+  .modal-close{background:none;border:none;font-size:18px;color:#999;cursor:pointer;line-height:1}
+  .modal-close:hover{color:#333}
+  .modal-body{padding:20px 24px 8px}
+  .modal-sub{font-size:13px;font-weight:600;margin-bottom:16px;color:#222}
+  .form-row{display:flex;margin-bottom:16px;align-items:flex-start}
+  .form-row .label{width:120px;text-align:right;padding-right:12px;padding-top:6px;font-size:12px;color:#333;flex:none}
+  .form-row .label.req::before{content:"*";color:var(--primary);margin-right:2px}
+  .form-row .field{flex:1}
+  .form-row input[type=text],.form-row textarea,.form-row select{width:100%;border:1px solid var(--line);border-radius:4px;padding:6px 10px;font-size:12px;font-family:inherit}
+  .form-row input[disabled]{background:#F5F5F5;color:#999;cursor:not-allowed}
+  .form-row textarea{min-height:72px;resize:vertical}
+  .char-count{text-align:right;font-size:11px;color:#bbb;margin-top:2px}
+  .tags-wrap{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+  .tag{display:inline-flex;align-items:center;gap:4px;background:#F5F5F5;border:1px solid var(--line);border-radius:4px;padding:2px 8px;font-size:12px}
+  .tag .rm{cursor:pointer;color:#999;font-size:14px;line-height:1}
+  .tag .rm:hover{color:var(--primary)}
+  .tag-add{display:flex;gap:8px}
+  .tag-add input{flex:1}
+  .switch{position:relative;width:44px;height:22px;background:#ccc;border-radius:11px;cursor:pointer;transition:.2s}
+  .switch.on{background:var(--primary)}
+  .switch::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+  .switch.on::after{left:24px}
+  .modal-foot{padding:16px 24px 20px;display:flex;justify-content:center;gap:12px;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="g-side">
+    <div class="logo">中免</div>
+    <div class="g-nav" title="素材中心">📁</div>
+    <div class="g-nav" title="订单">📋</div>
+    <div class="g-nav on" title="商品">📦</div>
+    <div class="g-nav" title="营销">🎯</div>
+    <div class="g-nav" title="直播">📺</div>
+    <div class="g-nav" title="资源">🔗</div>
+    <div class="g-nav" title="内容">📝</div>
+    <div class="g-nav" title="会员">👤</div>
+  </aside>
+  <aside class="sub-side">
+    <div class="title">商品设置</div>
+    <a class="sub-nav on" href="category_management.html">后台类目</a>
+    <a class="sub-nav" href="attribute_template_list.html">属性模版管理</a>
+    <a class="sub-nav" href="#">业务配置</a>
+    <a class="sub-nav" href="#">Hscode基础数据</a>
+  </aside>
+  <div class="main">
+    <div class="topbar">
+      <h1>中免日上运营平台-demo</h1>
+      <div class="right">
+        <span>偏好设置</span>
+        <div class="avatar">陆</div>
+        <span>陆蓉洁</span>
+      </div>
+    </div>
+    <div class="tabs">
+      <div class="tab on">后台类目 <span class="x">×</span></div>
+    </div>
+    <div class="content">
+      <div class="tree-panel">
+        <div class="tree-search">
+          <input type="text" id="treeSearch" placeholder="请输入类目名称" />
+        </div>
+        <div class="tree-tools">
+          <span id="expandAll">展开</span>
+          <span id="collapseAll">收起</span>
+          <span>导出全部</span>
+        </div>
+        <div class="tree-body" id="treeBody"></div>
+      </div>
+      <div class="detail-panel" id="detailPanel">
+        <div class="section">
+          <div class="section-head">
+            <h2>基本信息</h2>
+            <button class="btn btn-primary" id="editBtn">编辑</button>
+          </div>
+          <div class="info-grid" id="basicInfo"></div>
+        </div>
+        <div class="section">
+          <div class="section-head"><h2>已关联属性列表</h2></div>
+          <table>
+            <thead>
+              <tr><th>模版ID</th><th>模版名称</th><th>模版编码</th></tr>
+            </thead>
+            <tbody id="attrTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="overlay" id="editModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>修改类目</h3>
+      <button class="modal-close" id="closeModal">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-sub">基本信息</div>
+      <div class="form-row">
+        <div class="label req">类目编码</div>
+        <div class="field"><input type="text" id="fCode" disabled /></div>
+      </div>
+      <div class="form-row">
+        <div class="label req">类目名称</div>
+        <div class="field">
+          <input type="text" id="fName" maxlength="60" />
+          <div class="char-count"><span id="nameCount">0</span>/60</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="label">备注</div>
+        <div class="field"><textarea id="fRemark" placeholder="请输入备注"></textarea></div>
+      </div>
+      <div class="form-row">
+        <div class="label">标签</div>
+        <div class="field">
+          <div class="tags-wrap" id="tagsWrap"></div>
+          <div class="tag-add">
+            <input type="text" id="tagInput" placeholder="" />
+            <button class="btn btn-primary" id="addTag">添加</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="label">是否有医疗器械商品</div>
+        <div class="field"><div class="switch" id="medSwitch"></div></div>
+      </div>
+      <div class="form-row">
+        <div class="label">对应cibo类目</div>
+        <div class="field">
+          <select id="fCibo">
+            <option value="运动-运动装备-其他">运动-运动装备-其他</option>
+            <option value="美妆-护肤-面部">美妆-护肤-面部</option>
+            <option value="数码-摄影-望远镜">数码-摄影-望远镜</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-default" id="cancelEdit">取消</button>
+      <button class="btn btn-primary" id="submitEdit">提交</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const categories = {
+  root: { id:'root', name:'平台后台类目', code:'', children:['beauty','sports','watch','food','baby','home','digital','health'] },
+  beauty: { id:'beauty', name:'美妆护肤', code:'6214e1000000000000000001', remark:'-', tags:[], medical:false, cibo:'美妆-护肤-面部', parent:'root', children:[] },
+  sports: { id:'sports', name:'运动/户外', code:'6214e2000000000000000002', remark:'-', tags:[], medical:false, cibo:'运动-运动装备-其他', parent:'root', children:['outdoor'] },
+  outdoor: { id:'outdoor', name:'户外装备', code:'6214e3000000000000000003', remark:'-', tags:[], medical:false, cibo:'运动-运动装备-其他', parent:'sports', children:['telescope','backpack','tent'] },
+  telescope: { id:'telescope', name:'望远镜', code:'6214e56df8e5c40001fe6031', remark:'-', tags:['特别限定版','仅特殊限定规格（不包含限定包装）'], medical:false, cibo:'运动-运动装备-其他', parent:'outdoor', children:[], templates:[{id:'6a0532f93a061ed610904336',name:'邮轮游测试模板',code:'yl1'}] },
+  backpack: { id:'backpack', name:'登山包', code:'6214e56df8e5c40001fe6032', remark:'-', tags:[], medical:false, cibo:'运动-运动装备-其他', parent:'outdoor', children:[], templates:[] },
+  tent: { id:'tent', name:'帐篷', code:'6214e56df8e5c40001fe6033', remark:'-', tags:[], medical:false, cibo:'运动-运动装备-其他', parent:'outdoor', children:[], templates:[] },
+  watch: { id:'watch', name:'腕表/珠宝', code:'6214e4000000000000000004', remark:'-', tags:[], medical:false, cibo:'', parent:'root', children:[] },
+  food: { id:'food', name:'食品/酒水', code:'6214e5000000000000000005', remark:'-', tags:[], medical:false, cibo:'', parent:'root', children:[] },
+  baby: { id:'baby', name:'母婴/玩具', code:'6214e6000000000000000006', remark:'-', tags:[], medical:false, cibo:'', parent:'root', children:[] },
+  home: { id:'home', name:'家居/生活', code:'6214e7000000000000000007', remark:'-', tags:[], medical:false, cibo:'', parent:'root', children:[] },
+  digital: { id:'digital', name:'数码/电器', code:'6214e8000000000000000008', remark:'-', tags:[], medical:false, cibo:'', parent:'root', children:[] },
+  health: { id:'health', name:'健康/保健', code:'6214e9000000000000000009', remark:'-', tags:[], medical:true, cibo:'', parent:'root', children:[] }
+};
+
+let selectedId = 'telescope';
+let expanded = new Set(['root','sports','outdoor']);
+let editTags = [];
+
+function getPath(id) {
+  const path = [];
+  let cur = categories[id];
+  while (cur && cur.parent) {
+    path.unshift(cur);
+    cur = categories[cur.parent];
+  }
+  if (cur) path.unshift(cur);
+  return path;
+}
+
+function renderTree(filter = '') {
+  const body = document.getElementById('treeBody');
+  body.innerHTML = '';
+  function renderNode(id, depth) {
+    const node = categories[id];
+    if (!node) return;
+    const match = !filter || node.name.includes(filter);
+    const childIds = node.children || [];
+    const hasChildren = childIds.length > 0;
+    const isOpen = expanded.has(id);
+    if (filter && !match && !childIds.some(cid => categories[cid]?.name.includes(filter))) return;
+
+    const el = document.createElement('div');
+    el.className = 'tree-node' + (selectedId === id ? ' on' : '');
+    el.style.paddingLeft = (depth * 16 + 4) + 'px';
+    el.innerHTML = `<span class="arrow ${hasChildren ? (isOpen ? 'open' : '') : ''}">${hasChildren ? '▶' : ''}</span><span class="icon">${depth === 0 ? '📂' : (hasChildren ? '📁' : '📄')}</span>${node.name}`;
+    el.onclick = (e) => {
+      if (e.target.classList.contains('arrow') && hasChildren) {
+        isOpen ? expanded.delete(id) : expanded.add(id);
+        renderTree(filter);
+        return;
+      }
+      selectedId = id;
+      renderTree(filter);
+      renderDetail();
+    };
+    if (match || !filter) body.appendChild(el);
+    if (hasChildren && isOpen) childIds.forEach(cid => renderNode(cid, depth + 1));
+  }
+  renderNode('root', 0);
+}
+
+function renderDetail() {
+  const cat = categories[selectedId];
+  if (!cat || selectedId === 'root') {
+    document.getElementById('basicInfo').innerHTML = '<div class="info-item full"><span class="value" style="color:#999">请选择三级类目查看详情</span></div>';
+    document.getElementById('attrTable').innerHTML = '';
+    document.getElementById('editBtn').style.display = cat && selectedId === 'root' ? 'none' : '';
+    return;
+  }
+  const isLeaf = !cat.children || cat.children.length === 0;
+  document.getElementById('editBtn').style.display = isLeaf && selectedId !== 'root' ? '' : 'none';
+
+  document.getElementById('basicInfo').innerHTML = `
+    <div class="info-item"><span class="label">类目名称</span><span class="value">${cat.name}</span></div>
+    <div class="info-item"><span class="label">类目编码</span><span class="value">${cat.code || '-'}</span></div>
+    <div class="info-item"><span class="label">备注</span><span class="value">${cat.remark || '-'}</span></div>
+    <div class="info-item full"><span class="label">标签</span><span class="value">${cat.tags?.length ? cat.tags.join('，') : '-'}</span></div>
+    <div class="info-item"><span class="label">是否有医疗器械商品</span><span class="value">${cat.medical ? '是' : '否'}</span></div>
+    <div class="info-item"><span class="label">cibo类目</span><span class="value">${cat.cibo || '-'}</span></div>
+  `;
+
+  const templates = cat.templates || [];
+  document.getElementById('attrTable').innerHTML = templates.length
+    ? templates.map(t => `<tr><td>${t.id}</td><td>${t.name}</td><td>${t.code}</td></tr>`).join('')
+    : '<tr><td colspan="3" style="text-align:center;color:#999;padding:24px">暂无关联属性模版</td></tr>';
+}
+
+function openModal() {
+  const cat = categories[selectedId];
+  if (!cat || selectedId === 'root') return;
+  document.getElementById('fCode').value = cat.code;
+  document.getElementById('fName').value = cat.name;
+  document.getElementById('fRemark').value = cat.remark === '-' ? '' : (cat.remark || '');
+  document.getElementById('fCibo').value = cat.cibo || '';
+  document.getElementById('medSwitch').classList.toggle('on', cat.medical);
+  editTags = [...(cat.tags || [])];
+  renderEditTags();
+  updateNameCount();
+  document.getElementById('editModal').classList.add('show');
+}
+
+function renderEditTags() {
+  document.getElementById('tagsWrap').innerHTML = editTags.map((t, i) =>
+    `<span class="tag">${t}<span class="rm" data-i="${i}">×</span></span>`
+  ).join('');
+  document.getElementById('tagsWrap').querySelectorAll('.rm').forEach(el => {
+    el.onclick = () => { editTags.splice(+el.dataset.i, 1); renderEditTags(); };
+  });
+}
+
+function updateNameCount() {
+  document.getElementById('nameCount').textContent = document.getElementById('fName').value.length;
+}
+
+function closeModal() {
+  document.getElementById('editModal').classList.remove('show');
+}
+
+document.getElementById('editBtn').onclick = openModal;
+document.getElementById('closeModal').onclick = closeModal;
+document.getElementById('cancelEdit').onclick = closeModal;
+document.getElementById('editModal').onclick = (e) => { if (e.target.id === 'editModal') closeModal(); };
+document.getElementById('fName').oninput = updateNameCount;
+document.getElementById('medSwitch').onclick = function() { this.classList.toggle('on'); };
+document.getElementById('addTag').onclick = () => {
+  const v = document.getElementById('tagInput').value.trim();
+  if (v && !editTags.includes(v)) { editTags.push(v); renderEditTags(); }
+  document.getElementById('tagInput').value = '';
+};
+document.getElementById('submitEdit').onclick = () => {
+  const cat = categories[selectedId];
+  cat.name = document.getElementById('fName').value;
+  cat.remark = document.getElementById('fRemark').value || '-';
+  cat.tags = [...editTags];
+  cat.medical = document.getElementById('medSwitch').classList.contains('on');
+  cat.cibo = document.getElementById('fCibo').value;
+  closeModal();
+  renderTree(document.getElementById('treeSearch').value);
+  renderDetail();
+};
+document.getElementById('treeSearch').oninput = (e) => renderTree(e.target.value.trim());
+document.getElementById('expandAll').onclick = () => { Object.keys(categories).forEach(k => expanded.add(k)); renderTree(); };
+document.getElementById('collapseAll').onclick = () => { expanded = new Set(['root']); renderTree(); };
+
+renderTree();
+renderDetail();
+</script>
+</body>
+</html>
